@@ -13,14 +13,17 @@ import { Rich, RichInline } from './Rich';
 type LeftTab = 'desc' | 'schema' | 'hints' | 'solution';
 type ConsoleTab = 'result' | 'verdict';
 
-const TEMPLATE = '-- Напишите запрос и нажмите «Запустить» (Ctrl+Enter)\n-- «Отправить» — проверка решения (Ctrl+Shift+Enter)\n\n';
+const LEGACY_TEMPLATE = '-- Напишите запрос и нажмите «Запустить» (Ctrl+Enter)\n-- «Отправить» — проверка решения (Ctrl+Shift+Enter)\n\n';
+const PLACEHOLDER = 'Напишите SQL-запрос…   Ctrl+Enter — запустить, Ctrl+Shift+Enter — отправить';
+
+const initialCode = (draft?: string) => (draft?.startsWith(LEGACY_TEMPLATE) ? draft.slice(LEGACY_TEMPLATE.length) : (draft ?? ''));
 
 export type RunState = { kind: 'idle' } | { kind: 'ok'; out: RunOutput } | { kind: 'error'; message: string };
 
 export function ProblemView({ problem }: { problem: Problem }) {
   const progress = useProgress();
   const pr = progress[problem.id];
-  const [code, setCode] = useState(() => getDraft(problem.id) ?? TEMPLATE);
+  const [code, setCode] = useState(() => initialCode(getDraft(problem.id)));
   const [leftTab, setLeftTab] = useState<LeftTab>('desc');
   const [consoleTab, setConsoleTab] = useState<ConsoleTab>('result');
   const [run, setRun] = useState<RunState>({ kind: 'idle' });
@@ -216,12 +219,12 @@ export function ProblemView({ problem }: { problem: Problem }) {
           <div className="tabs">
             <span className="tab active">‹/› SQLite</span>
             <div className="subbar-spacer" />
-            <button className="tab" onClick={() => onChange(TEMPLATE)} title="Очистить редактор">
+            <button className="tab" onClick={() => onChange('')} title="Очистить редактор">
               ↺ Сброс
             </button>
           </div>
           <div className="editor-box" style={{ height: `${100 - consoleHeight}%` }}>
-            <SqlEditor value={code} onChange={onChange} onRun={doRun} onSubmit={doSubmit} />
+            <SqlEditor value={code} onChange={onChange} onRun={doRun} onSubmit={doSubmit} placeholder={PLACEHOLDER} />
           </div>
           <div className="divider-y" onMouseDown={startDrag('y')} />
           <div className="console" style={{ height: `${consoleHeight}%` }}>

@@ -18,6 +18,7 @@ interface Props {
   onChange: (value: string) => void;
   onRun?: () => void;
   onSubmit?: () => void;
+  placeholder?: string;
 }
 
 const editorTheme = EditorView.theme({
@@ -25,9 +26,10 @@ const editorTheme = EditorView.theme({
   '.cm-scroller': { fontFamily: "'JetBrains Mono', Consolas, monospace", lineHeight: '1.6' },
   '.cm-gutters': { backgroundColor: 'transparent', border: 'none' },
   '.cm-content': { paddingTop: '10px' },
+  '.cm-placeholder': { color: '#6b7280', fontStyle: 'italic' },
 });
 
-export function SqlEditor({ value, onChange, onRun, onSubmit }: Props) {
+export function SqlEditor({ value, onChange, onRun, onSubmit, placeholder }: Props) {
   const handlers = useRef({ onRun, onSubmit });
   handlers.current = { onRun, onSubmit };
 
@@ -64,6 +66,8 @@ export function SqlEditor({ value, onChange, onRun, onSubmit }: Props) {
       theme={oneDark}
       extensions={extensions}
       height="100%"
+      placeholder={placeholder}
+      autoFocus
       indentWithTab={false}
       basicSetup={{ highlightActiveLine: true, autocompletion: false, completionKeymap: false, bracketMatching: true }}
     />
