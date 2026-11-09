@@ -2,6 +2,7 @@ import type { Route } from '../router';
 import { PROBLEMS } from '../data/problems';
 import { useProgress } from '../store/progress';
 import { AuthButton } from './AuthButton';
+import { ThemeSwitch } from './ThemeSwitch';
 
 const NAV = [
   { page: 'problems', label: 'Задачи', href: '#/problems' },
@@ -33,6 +34,7 @@ export function Header({ route }: { route: Route }) {
           <b>{solved}</b>
           <span className="muted">/ {PROBLEMS.length}</span>
         </div>
+        <ThemeSwitch />
         <AuthButton />
       </div>
     </header>

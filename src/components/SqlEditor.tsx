@@ -12,6 +12,7 @@ import {
   startCompletion,
 } from '@codemirror/autocomplete';
 import { COMPLETION_SCHEMA } from '../db/schema';
+import { useTheme } from '../store/theme';
 
 interface Props {
   value: string;
@@ -30,6 +31,7 @@ const editorTheme = EditorView.theme({
 });
 
 export function SqlEditor({ value, onChange, onRun, onSubmit, placeholder }: Props) {
+  const { resolved } = useTheme();
   const handlers = useRef({ onRun, onSubmit });
   handlers.current = { onRun, onSubmit };
 
@@ -63,7 +65,7 @@ export function SqlEditor({ value, onChange, onRun, onSubmit, placeholder }: Pro
       className="editor"
       value={value}
       onChange={onChange}
-      theme={oneDark}
+      theme={resolved === 'dark' ? oneDark : 'light'}
       extensions={extensions}
       height="100%"
       placeholder={placeholder}
